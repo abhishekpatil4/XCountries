@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid';
 import axios from "axios"
 import { useState, useEffect } from 'react';
+import { FlagCard } from './FlagCard';
 
 export const FlagsGrid = () => {
     const [data, setData] = useState([]);
@@ -9,8 +10,8 @@ export const FlagsGrid = () => {
             const url = "https://restcountries.com/v3.1/all";
             try {
                 const res = await axios.get(url);
-                console.log("name: ", res.data[0].name.official)
-                console.log("flag src: ", res.data[0].flags.png)
+                console.log("name: ", res.data[0])
+                setData(res.data);
             } catch (e) {
                 console.log("err:", e.response);
             }
@@ -19,9 +20,11 @@ export const FlagsGrid = () => {
     }, [])
     return <>
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4} lg={2}>
-                <span>hi</span>
-            </Grid>
+            {data && data.map((d, idx) =>
+                <Grid item xs={12} sm={6} md={4} lg={2} key={idx}>
+                    <FlagCard name={d.name.official} url={d.flags.png}/>
+                </Grid>
+            )}
         </Grid>
     </>
 }
